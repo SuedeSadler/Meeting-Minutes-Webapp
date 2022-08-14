@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      .gradient-custom {
+          /* fallback for old browsers */
+          background: #f6d365;
+          
+          
+        
+          background: rgb(79,79,79)
+  </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+            {% endfor%} 
+          {% endif %}
+          
+          
+          <div class="pos-f-t">
+            <div class="collapse" id="navbarToggleExternalContent">
+              <div class="bg-dark p-4">
+                  <ul class="navbar-nav">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="{% url 'minutes-home' %}"><h2>Home</h2> <span class="sr-only">(current)</span></a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'minutes-My_Meetings' %}"><h2>My Meetings</h2></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'create' %}"><h2>Create</h2></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'profile' %}"><h2>Profile</h2></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}"><h2>Logout</h2></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'login' %}"><h2>Login</h2></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'register' %}"><h2>Register</h2></a>
+                    </li>
+                    {% endif %}
+                  </ul>
+              </div>
+            </div>
+            <nav class="navbar navbar-dark bg-dark">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </nav>
+          </div>
+        </nav>
+        <div class= "text" style= "padding:40px">
+            {% load static %} <img src="{% static "Minutes/media/Logo.png" %}" class="img-" alt="home" height= "200px" />
+        </div>
+        
+
+
+        {% for post in posts %}
+        <section class="vh-20" style="background-color: #f4f5f7;">
+          <div class="container py-5 ">
+            <div class="row d-flex justify-content-center align-items-center h-10">
+              <div class="col col-lg-10 mb-4 mb-lg-0">
+                <div class="card mb-3" style="border-radius: .5rem;">
+                  <div class="row g-0">
+                    <div class="col-md-4 gradient-custom text-center text-white"
+                      style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                      <img class="rounded-circle account-img" src="{{ user.profile.image.url }}"
+                        alt="Avatar" class="img-fl my-5" style="width: 150px;"  />
+                      <h5 style="padding: 10px;">{{ user.username }}</h5>
+                      <p>{{ user.email }}</p>
+                      <i class="far fa-edit mb-5"></i>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body p-4">
+                        <form method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <fieldset class="form-group">
+                             <legend class="border-bottom mb-4"><h3>{{ post.Meeting_name }}</h3></legend>
+                             <form>
+                              <div class="form-row">
+                                <div class="col-7">
+                                  <h5>Date:{{post.Date}}</h5>
+                                </div>
+                                <div class="col">
+                                  <h6>Created by:{{ user.username }}</h6>
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="col-7">
+                                  <h5></h5>
+                                </div>
+                                <div class="col">
+                                  <h6>Absentees: {{post.Absentees}}</h6>
+                                </div>
+                              </div>
+                              
+                                <legend class="border-bottom mb-4"><h3>Topic</h3></legend>
+                              <div class="form-row">
+                                <div class="col-7">
+                                  <h4>{{post.Topic}}</h4>
+                                </div>
+                                <div class="col">
+                                  <h6>Raised by:{{ post.Raised_by }}</h6>
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="col-7">
+                                <div class="form-group">
+                                  <label for="exampleFormControlTextarea1"><h5>Actions required:</h5></label>
+                                  <h6>{{ post.Actions_required}}</h6>
+                                </div>
+                              </div>
+                                <div class="col-5">
+                                  <h6>Actioned by:{{ post.Actioned_by}}</h6>
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="col-7">
+                                <div class="form-group">
+                                  <label for="exampleFormControlTextarea1"><h5>Subsequent Information:</h5></label>
+                                  <h6>{{ post.Extra_info}}</h6>
+                                </div>
+                              </div>
+                              <div class="col-5">
+                                <h6>Date of completion:{{ post.Date_of_completion}}</h6>
+                              </div>
+                            </form>
+                          <div class="form-group"> 
+                             <button class="btn btn-dark btn-lg mb-4" type="submit">Add Topic</button>
+                          </div>   
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {% endfor %}
+        
+        
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+
+    
+    </script>
+  </body>
+</html>
